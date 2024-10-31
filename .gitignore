@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Vite build output
+dist/
+
+# Local environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.tmp
+*.log
+
+# Cache directories
+.cache/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+coverage/
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Dependency directories
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Editor or OS-specific files
+.idea/
+.vscode/
+*.swp
