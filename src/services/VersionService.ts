@@ -53,6 +53,8 @@ class VersionService {
                 this.documentStore.setDocument(document);
             }
         }
+
+        console.log("Saved document", document);
     }
 
     public createNewVersion(parentVersionId?: string): Version | null {
@@ -71,6 +73,7 @@ class VersionService {
         return {
             id: generateUniqueId(),
             name: `v${latestVersionNumber + 1}`,
+            title: '',
             steps: [],
             createdAt: new Date(),
             updatedAt: new Date(),

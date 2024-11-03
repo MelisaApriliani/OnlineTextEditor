@@ -47,12 +47,17 @@ class BranchService {
     constructor(storeContext: EditorStoreContextProps) {
         this.documentStore = storeContext.documentStore;
         this.versionStore = storeContext.versionStore;
+
+        console.log(this.documentStore);
+        console.log(this.versionStore);
     }
 
-    public createBranch(fromVersionId?: string) {
-        const { document } = this.documentStore;
+    public createBranch(fromVersionId?: string) : Branch {
+        // const { document } = this.documentStore;
 
-        if (document) {
+        // console.log("document ", document);
+
+        // if (document) {
             const branchName: string = fromVersionId ? `${fromVersionId}-branch` : "main";
 
             const newBranch: Branch = {
@@ -61,12 +66,14 @@ class BranchService {
                 versions: [],
             };
 
-            document.branches.push(newBranch);
-            this.documentStore.setDocument(document);
+            // document.branches.push(newBranch);
+            // this.documentStore.setDocument(document);
 
-            const currentVersionId = fromVersionId ? fromVersionId : null;
-            this.versionStore.setVersionContext(newBranch.id, currentVersionId);
-        }
+            // const currentVersionId = fromVersionId ? fromVersionId : null;
+            // this.versionStore.setVersionContext(newBranch.id, currentVersionId);
+        // }
+
+        return newBranch;
     }
 }
 
