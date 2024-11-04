@@ -4,6 +4,7 @@ export interface Version {
     id: string;
     name: string;
     title: string;
+    content: string;
     steps: Step[];
     createdAt: Date;
     updatedAt: Date;

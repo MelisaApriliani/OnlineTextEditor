@@ -3,8 +3,8 @@ import { useDocumentStore, DocumentStore } from './DocumentStore';
 import { useVersionStore, VersionStore } from './VersionStore';
 
 export interface EditorStoreContextProps {
-    documentStore: DocumentStore; // Use the DocumentStore type here
-    versionStore: VersionStore; // Use the VersionStore type here
+    documentStore: DocumentStore; 
+    versionStore: VersionStore; 
 }
 
 const EditorStoreContext = createContext<EditorStoreContextProps | undefined>(undefined);
@@ -25,5 +25,5 @@ export const useEditorStoreContext = (): EditorStoreContextProps => {
     if (!context) {
         throw new Error('useEditorStoreContext must be used within an EditorStoreProvider');
     }
-    return context as EditorStoreContextProps; // Ensure context is asserted to the correct type
+    return context as EditorStoreContextProps; 
 };

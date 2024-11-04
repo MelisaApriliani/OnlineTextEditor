@@ -4,6 +4,9 @@
   --color-text: #333;
   --color-background: #f8f9fa;
   --color-border: #ddd;
+  --color-background-primary: #ffffff;
+  --color-blue:#007bff;
+  --color-dark-blue:#0056b3;
 
   --font-family-main: "Helvetica Neue", Arial, sans-serif;
   --font-size-small: 12px !important;
@@ -23,19 +26,24 @@
 }
 
 body {
-  margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-family-main);
-  background-color: var(--color-background);
   color: var(--color-text);
+}
+
+html, body, #root {
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  background-color: var(--color-background-primary);
 }
 
 #root {
   display: flex;
-  flex: 1; /* Takes up remaining space inside body */
+  flex: 1; 
 }
 
 h1 {
@@ -44,6 +52,10 @@ h1 {
 
 h2 {
   font-size: var(--font-size-medium);
+}
+
+h3 {
+  font-size: var(--font-size-small);
 }
 
 p {

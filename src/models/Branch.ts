@@ -4,4 +4,5 @@ export interface Branch {
     id: string;
     name: string;
     versions: Version[]; 
+    parentId: string;
 }

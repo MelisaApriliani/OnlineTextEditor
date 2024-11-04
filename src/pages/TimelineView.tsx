@@ -1,107 +1,108 @@
 import React, { useState, useEffect } from 'react';
-import { useEditor, EditorContent  } from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
 import { useEditorStoreContext } from '../stores/EditorStoreProvider';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Version } from '../models/Version';
+import VersionService  from '../services/VersionService';
+import BranchService  from '../services/BranchService';
+import BranchingView from '../components/BranchingView';
+import { useNavigate } from 'react-router-dom';
 import '../styles/global.css';
+import '../styles/timelineview.css';
 
 const TimelineView: React.FC = () => {
-    const { documentStore, versionStore } = useEditorStoreContext();
+    const storeContext = useEditorStoreContext();
+    const { documentStore, versionStore} = storeContext; 
     const { document } = documentStore;
-    const { currentVersionId } = versionStore;
-
+    const { currentVersionId, currentBranchId } = versionStore;
     const [currentVersion, setCurrentVersion] = useState<Version | null>(null);
-    const [editorContent, setEditorContent] = useState<string>('');
-    
+    const versionService = new VersionService(storeContext);
+    const branchService = new BranchService(storeContext);
+    const navigate = useNavigate();
+
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [StarterKit, 
+            Placeholder.configure({
+            placeholder: 'Start typing your content here...', 
+        }),],
         editable: false,
-        content: editorContent,
+        content: '',
     });
 
-    // Function to fetch the version by ID
-    const getVersionById = (versionId: string | null): Version | null => {
-        if (!document || !versionId) return null;
-        for (const branch of document.branches) {
-            const version = branch.versions.find(v => v.id === versionId);
-            if (version) return version;
-        }
-        return null;
-    };
-
-    // Function to find the previous version across branches
-    const getPreviousVersion = (): Version | null => {
-        if (!document || !currentVersion) return null;
-
-        // Flatten all versions across branches into a single array
-        const allVersions = document.branches.flatMap(branch => branch.versions);
-        const currentIndex = allVersions.findIndex(v => v.id === currentVersion.id);
-        console.log("previous - all versions", allVersions);
-        console.log("previous - currentIndex", currentIndex);
-        let prevVersion : Version|null;
-        prevVersion = currentIndex > 0 ? allVersions[currentIndex - 1] : null;
-        console.log("previous version", prevVersion);
-        return prevVersion;
-    };
-
-    // Function to find the next version across branches
-    const getNextVersion = (): Version | null => {
-        if (!document || !currentVersion) return null;
-
-        const allVersions = document.branches.flatMap(branch => branch.versions);
-        const currentIndex = allVersions.findIndex(v => v.id === currentVersion.id);
-        console.log("next - all next versions", allVersions);
-        console.log("next - currentIndex", currentIndex);
-        let nextVersion : Version|null;
-        nextVersion = currentIndex >= 0 ? allVersions[currentIndex + 1] : null;
-        console.log("next version", nextVersion);
-        return nextVersion;
-    };
-
-    // Update current version on component mount or when currentVersionId changes
+    // Set initial version content when component mounts or currentVersionId changes
     useEffect(() => {
-        console.log("Document in Timeline", document)
-        const initialVersion = getVersionById(currentVersionId);
-        console.log("initialVersion", initialVersion)
-        if (initialVersion) {
-            setCurrentVersion(initialVersion);
-            // setEditorContent(initialVersion.steps.map(step => step.content).join(''));
+        if(currentVersionId != null){
+            const initialVersion = versionService.getVersionById(currentVersionId);
+            if (initialVersion) {
+                setCurrentVersion(initialVersion);
+                editor?.commands.setContent(initialVersion.content || ''); 
+            }
         }
-    }, [currentVersionId, document]);
+    }, [currentVersionId, document, editor]);
 
-    // Handler to navigate to the previous version
+    // Update editor content when currentVersion changes
+    useEffect(() => {
+        if (currentVersion && editor) {
+            editor.commands.setContent(currentVersion.content || ''); 
+        }
+    }, [currentVersion, editor]);
+
+    // Handler for previous version
     const handlePrevious = () => {
-        const prevVersion = getPreviousVersion();
-        if (prevVersion) {
-            setCurrentVersion(prevVersion);
-            // setEditorContent(prevVersion.steps.map(step => step.content).join(''));
+        if(currentVersion){
+            const prevVersion = versionService.getPreviousVersion(currentVersion?.id);
+            if (prevVersion) {
+                setCurrentVersion(prevVersion);
+            }
         }
     };
 
-    // Handler to navigate to the next version
+    // Handler for next version
     const handleNext = () => {
-        const nextVersion = getNextVersion();
-        if (nextVersion) {
-            setCurrentVersion(nextVersion);
-            setEditorContent(nextVersion.steps.map(step => step.change).join(''));
+        if(currentVersion){
+            const nextVersion = versionService.getNextVersion(currentVersion?.id);
+            if (nextVersion) {
+                setCurrentVersion(nextVersion);
+            }
+        }
+    };
+
+    const handleVersionClick = (branchId: string, versionId: string) => {
+        const version = versionService.getVersionById(versionId);
+        if (version) {
+            setCurrentVersion(version);
+            versionService.navigateVersion(branchId,versionId);
+            navigate("/", { replace: true });
         }
     };
 
     return (
         <div className="timeline-container">
-            <h1>{currentVersion?.title}</h1>
+            <h1>Document History</h1>
             <div className="editor-content-container">
+                <h2>{currentVersion?.title}</h2>
                 {editor && <EditorContent editor={editor} />}
             </div>
-            <div className="navigation-buttons">
-                <button onClick={handlePrevious} disabled={!getPreviousVersion()}>
-                    <FaArrowLeft /> Previous
-                </button>
-                <button onClick={handleNext} disabled={!getNextVersion()}>
-                    Next <FaArrowRight />
-                </button>
+            <div className='editor-content-footer'>
+                {currentVersion && (
+                        <div className="branch-version-label">
+                            {branchService.getBranchName(currentBranchId)} branch: version {currentVersion.name}
+                        </div>
+                )}
+                <div className="navigation-buttons">
+                    <button onClick={handlePrevious} disabled={!currentVersion || !versionService.getPreviousVersion(currentVersion.id)}>
+                        <FaArrowLeft /> Previous
+                    </button>
+                    <button onClick={handleNext} disabled={!currentVersion || !versionService.getNextVersion(currentVersion.id)}>
+                        Next <FaArrowRight />
+                    </button>
+                </div>
             </div>
+            <h3>Document branches:</h3>
+            <BranchingView branchArray={document?.branches} onVersionClick={handleVersionClick} currentVersionId={currentVersion?.id}/>
+
         </div>
     );
 };

@@ -1,0 +1,45 @@
+.branch-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    height: auto;
+    margin: 20px 0;
+    background-color: white;
+}
+
+.branch {
+    position: relative;
+    height: 60px;
+}
+
+.branch-line {
+    width: 100%;
+    border-top: 2px solid black;
+    position: absolute;
+    top: 50%;
+    left: 0;
+}
+
+.version-dot {
+    width: 15px;
+    height: 15px;
+    background-color: blue;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.branch-label {
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.connector-line {
+    background-color: black;
+    width: 2px;
+}

@@ -1,0 +1,43 @@
+.timeline-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 20px;
+    white-space: nowrap;
+  }
+  
+  .branch {
+    margin-right: 40px;
+  }
+  
+  .versions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .version-node {
+    position: relative;
+    margin-right: 20px;
+    text-align: center;
+  }
+  
+  .version-dot {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .version-dot:hover {
+    background-color: #3e8e41;
+  }
+  
+  .connector {
+    position: absolute;
+    width: 2px;
+    height: 50px;
+    background-color: #555;
+    left: 50%;
+    bottom: -25px;
+  }

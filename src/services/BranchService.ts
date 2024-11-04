@@ -1,39 +1,4 @@
 
-// import { Branch } from '../models/Branch';
-// import { generateUniqueId } from '../utils/Util';
-// // import { DocumentStore } from '../stores/DocumentStore';
-// // import { VersionStore } from '../stores/VersionStore';
-// import { EditorStoreContextProps } from '../stores/EditorStoreProvider';
-
-
-
-
-// export const createBranch = (storeContext: EditorStoreContextProps, fromVersionId?: string) => {
-//     const { documentStore, versionStore } = storeContext; 
-//     const { document } = documentStore; 
-//     // const { currentVersionId } = useVersionStore.getState();
-    
-//     if (document ) {
-
-//         let branchName:string = fromVersionId? `${fromVersionId}-branch` : "main"
-
-//         // let newVersion:Version|null = createNewVersion()
- 
-//         // if(newVersion && newVersion != null){
-//             const newBranch: Branch = {
-//                 id: generateUniqueId(),
-//                 name: branchName,
-//                 versions: [],
-//             };
-            
-//             document.branches.push(newBranch);
-//             documentStore.setDocument(document);
-            
-//             let currentVersionId = fromVersionId? fromVersionId : null;
-//             versionStore.setVersionContext(newBranch.id, currentVersionId);
-//         // }
-//     }
-// };
 
 // BranchService.ts
 import { Branch } from '../models/Branch';
@@ -42,39 +7,60 @@ import { EditorStoreContextProps } from '../stores/EditorStoreProvider';
 
 class BranchService {
     private documentStore: EditorStoreContextProps['documentStore'];
-    private versionStore: EditorStoreContextProps['versionStore'];
 
     constructor(storeContext: EditorStoreContextProps) {
         this.documentStore = storeContext.documentStore;
-        this.versionStore = storeContext.versionStore;
-
-        console.log(this.documentStore);
-        console.log(this.versionStore);
     }
 
-    public createBranch(fromVersionId?: string) : Branch {
-        // const { document } = this.documentStore;
+    public createBranch(fromVersionId?: string, parentBranchId?: string) : Branch {
+            const { document } = this.documentStore;
 
-        // console.log("document ", document);
+            let fromVersionName: string = '';
+            if(document && parentBranchId ){
+                const branch = document.branches.find(branch => branch.id === parentBranchId);
+                const currentVersion = branch?.versions.find(v => v.id === fromVersionId);
+                fromVersionName = currentVersion ? currentVersion.name : '';
 
-        // if (document) {
-            const branchName: string = fromVersionId ? `${fromVersionId}-branch` : "main";
+            }
+
+            const branchName: string = (fromVersionName != '') ? `${fromVersionName}-branch` : "main";
 
             const newBranch: Branch = {
                 id: generateUniqueId(),
                 name: branchName,
                 versions: [],
+                parentId: parentBranchId? parentBranchId : '',
             };
-
-            // document.branches.push(newBranch);
-            // this.documentStore.setDocument(document);
-
-            // const currentVersionId = fromVersionId ? fromVersionId : null;
-            // this.versionStore.setVersionContext(newBranch.id, currentVersionId);
-        // }
-
         return newBranch;
     }
+
+    public getBranchName(branchId: string | null) : string | null {
+        const { document } = this.documentStore;
+        let branchName;
+
+        if(document && branchId){
+            const branch = document.branches.find(branch => branch.id === branchId);
+            branchName = branch?.name;
+        }
+
+        return branchName ? branchName : null;
+    }
+
+    public addNewBranch(versionId: string, branchId: string): Promise<string | null> {
+        return new Promise((resolve) => {
+            const { document } = this.documentStore;
+    
+            const newBranch: Branch = this.createBranch(versionId, branchId);
+    
+            if (document && newBranch) {
+                document.branches.push(newBranch);
+                this.documentStore.setDocument(document);
+            }
+    
+            resolve((document && newBranch) ? newBranch.id : null); 
+        });
+    }
+ 
 }
 
 export default BranchService;

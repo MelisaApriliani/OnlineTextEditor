@@ -18,19 +18,13 @@
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.timeline-container {
+.center-container {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 20px;
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    margin: 0 auto;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    justify-content: center; /* Centers children horizontally */
 }
 
 .text-editor {
+    height: 300px;
     min-height: 300px;
     padding: 10px;
     border: 1px solid var(--color-border);
@@ -40,17 +34,41 @@
     font-family: var(--font-family-main);
     color: var(--color-text);
     font-size: var(--font-size-small);
+    cursor: text;
+    z-index: 1;
 }
 
 .text-editor  *:focus {
     outline: none !important; 
 }
 
+.tiptap.ProseMirror {
+    min-height: 80% !important;
+    line-height: 1.5; 
+    padding: 10px; 
+    background-color: white; 
+}
+
+div.tiptap.Prosemirror {
+    min-height: 100% !important; 
+    height: auto; 
+    display: flex; 
+    flex-direction: column;
+}
+
+.ProseMirror {
+    min-height: 100% !important; 
+    height: auto; 
+    display: flex; 
+    flex-direction: column;
+    cursor: text; 
+}
+
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .history-button {
@@ -62,6 +80,8 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: var(--font-size-small);
+    
 }
 
 .history-button:hover {
@@ -70,5 +90,28 @@
 
 .history-button:focus {
     background-color: darkorange;
+    outline: none !important;
+}
+
+.confirm-button {
+    background-color: var(--color-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: var(--font-size-small);
+    width: 120px;
+    
+}
+
+.confirm-button:hover {
+    background-color: var(--color-dark-blue);
+}
+
+.confirm-button:focus {
+    background-color: var(--color-dark-blue);
     outline: none !important;
 }
