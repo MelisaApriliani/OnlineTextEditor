@@ -31,11 +31,11 @@ const BranchingView: React.FC<Props> = ({ branchArray, onVersionClick, currentVe
                     border: '1px solid #555',
                     padding: '4px',
                     borderRadius: 5,
-                    maxWidth: '35px',  // Set maximum width
-                    maxHeight: '20px',  // Set maximum height
-                    width: '30px',  // Set maximum width
+                    maxWidth: '35px', 
+                    maxHeight: '20px', 
+                    width: '30px',  
                     height: '17px',
-                    textOverflow: 'ellipsis', // Optional: add ellipsis for overflow text
+                    textOverflow: 'ellipsis', 
                     whiteSpace: 'nowrap',
                     fontSize: '5px',
                     cursor:'pointer',
