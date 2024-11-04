@@ -1,7 +1,6 @@
 import React, { useEffect }  from 'react';
 import TextEditor from '../components/TextEditor';
 import { Document } from '../models/Document';
-// import { useDocumentStore } from '../stores/DocumentStore';
 import DocumentService  from '../services/DocumentService';
 
 import { useEditorStoreContext } from '../stores/EditorStoreProvider';
@@ -9,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/global.css'
 
 const Home: React.FC = () => {
-    // const existingDocument = useDocumentStore((state) => state.document);
     const storeContext = useEditorStoreContext();
     const { documentStore, versionStore} = storeContext; 
     const { document } = documentStore; 

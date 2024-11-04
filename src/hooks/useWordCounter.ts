@@ -13,13 +13,12 @@ export const useWordCounter = (editor: Editor | null) => {
             setWordCount(count);
         };
 
-        // Initial word count calculation
         updateWordCount();
 
         // Listen to editor updates for live word count
         editor.on('update', updateWordCount);
 
-        // Cleanup listener when the editor unmounts or hook re-runs
+        // Cleanup listener when the editor unmounts 
         return () => {
             editor.off('update', updateWordCount);
         };

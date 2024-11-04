@@ -84,7 +84,7 @@ const TextEditor: React.FC = () => {
                     // If current version is the head, navigate using the current branch
                     await versionService.navigateVersion(currentBranchId, newVersion.id);
                     // Save the new version in both cases
-                versionService.saveVersion(newVersion, currentBranchId);
+                    versionService.saveVersion(newVersion, currentBranchId);
                 }
                 
                 
