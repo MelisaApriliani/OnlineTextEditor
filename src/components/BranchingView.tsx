@@ -38,6 +38,7 @@ const BranchingView: React.FC<Props> = ({ branchArray, onVersionClick, currentVe
                     textOverflow: 'ellipsis', // Optional: add ellipsis for overflow text
                     whiteSpace: 'nowrap',
                     fontSize: '5px',
+                    cursor:'pointer',
                     backgroundColor: version.id === currentVersionId ? '#FFD700' : '#FFF',
                 },
                 sourcePosition: Position.Bottom,
@@ -79,5 +80,5 @@ const BranchingView: React.FC<Props> = ({ branchArray, onVersionClick, currentVe
     );
 };
 
-// export default React.memo(BranchingView);
-export default BranchingView;
+export default React.memo(BranchingView);
+
