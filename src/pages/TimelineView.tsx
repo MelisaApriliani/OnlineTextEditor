@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -22,14 +22,17 @@ const TimelineView: React.FC = () => {
     const branchService = new BranchService(storeContext);
     const navigate = useNavigate();
 
-    const editor = useEditor({
-        extensions: [StarterKit, 
+    const editor =   useEditor({
+        extensions: [
+            StarterKit,
             Placeholder.configure({
-            placeholder: 'Start typing your content here...', 
-        }),],
+                placeholder: 'Start typing your content here...',
+            }),
+        ],
         editable: false,
         content: '',
     });
+    
 
     // Set initial version content when component mounts or currentVersionId changes
     useEffect(() => {
@@ -50,33 +53,33 @@ const TimelineView: React.FC = () => {
     }, [currentVersion, editor]);
 
     // Handler for previous version
-    const handlePrevious = () => {
-        if(currentVersion){
+    const handlePrevious = useCallback(() => {
+        if (currentVersion) {
             const prevVersion = versionService.getPreviousVersion(currentVersion?.id);
             if (prevVersion) {
                 setCurrentVersion(prevVersion);
             }
         }
-    };
+    }, [currentVersion, versionService]);
 
     // Handler for next version
-    const handleNext = () => {
-        if(currentVersion){
+    const handleNext = useCallback(() => {
+        if (currentVersion) {
             const nextVersion = versionService.getNextVersion(currentVersion?.id);
             if (nextVersion) {
                 setCurrentVersion(nextVersion);
             }
         }
-    };
+    }, [currentVersion, versionService]); 
 
-    const handleVersionClick = (branchId: string, versionId: string) => {
+    const handleVersionClick = useCallback((branchId: string, versionId: string) => {
         const version = versionService.getVersionById(versionId);
         if (version) {
             setCurrentVersion(version);
-            versionService.navigateVersion(branchId,versionId);
+            versionService.navigateVersion(branchId, versionId);
             navigate("/", { replace: true });
         }
-    };
+    }, [versionService, navigate]);
 
     return (
         <div className="timeline-container">
